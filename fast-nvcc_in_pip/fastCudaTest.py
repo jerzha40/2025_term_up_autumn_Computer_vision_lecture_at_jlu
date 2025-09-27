@@ -3,21 +3,6 @@ import os, glob, site, ctypes
 import numpy as np
 
 
-# 让系统能找到 cudart64_*.dll（来自 pip 的 nvidia-cuda-runtime*）
-def add_cuda_runtime_dirs():
-    for sp in site.getsitepackages() + [site.getusersitepackages()]:
-        for p in glob.glob(
-            os.path.join(sp, "nvidia", "cuda_runtime*", "bin")
-        ) + glob.glob(os.path.join(sp, "nvidia", "cuda_runtime*", "lib", "x64")):
-            if os.path.isdir(p):
-                try:
-                    os.add_dll_directory(p)  # Py3.8+
-                except Exception:
-                    os.environ["PATH"] = p + os.pathsep + os.environ.get("PATH", "")
-
-
-add_cuda_runtime_dirs()
-
 # 1) 加载你的 DLL（和 tes.py 同目录）
 dll = ctypes.CDLL(os.path.abspath("fastgpu.dll"))
 
