@@ -1,0 +1,6 @@
+numpy==2.3.3
+nvidia-cuda-crt==13.0.88
+nvidia-cuda-nvcc==13.0.88
+nvidia-cuda-runtime==13.0.88
+nvidia-nvvm==13.0.88
+pybind11==3.0.1
