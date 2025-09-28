@@ -18,7 +18,8 @@
         {
             "name": "MAVC",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${env:CUDA_PATH}/include"
             ],
             "defines": [
                 "_DEBUG",

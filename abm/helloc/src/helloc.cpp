@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 #include "kernels.cuh"
+#include <cuda_runtime.h>
 const size_t N = 10'000'000;
 bool nearly_equal(float a, float b, float eps = 1e-5);
 bool array_close(const std::vector<float> &a, const std::vector<float> &b, float eps = 1e-5);
@@ -39,6 +40,7 @@ int main()
     ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
     std::cout << "CPU Time:" << ms << " ms\n";
 
+    cuda_warmup();
     std::cout << "START Gpu\n";
     g0 = std::chrono::steady_clock::now();
     vector_add_gpu(A.data(), B.data(), C_gpu.data(), N);
