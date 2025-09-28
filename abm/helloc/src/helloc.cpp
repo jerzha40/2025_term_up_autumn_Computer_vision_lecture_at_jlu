@@ -2,6 +2,8 @@
 #include <vector>
 #include <random>
 #include <chrono>
+#include <cmath>
+#include <algorithm>
 #include "kernels.cuh"
 const size_t N = 10'000'000;
 bool nearly_equal(float a, float b, float eps = 1e-5);
@@ -17,22 +19,46 @@ int main()
         B[i] = dist(rng);
     }
 
-    std::cout << "START\n";
-    auto t0 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point t0, t1, g0, g1;
+    long long ms, gms;
+    std::cout << "START Cpu\n";
+    t0 = std::chrono::steady_clock::now();
     for (size_t i = 0; i < N; i++)
     {
         C_cpu[i] = A[i] + B[i];
     }
-    auto t1 = std::chrono::steady_clock::now();
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    t1 = std::chrono::steady_clock::now();
+    ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
     std::cout << "CPU Time:" << ms << " ms\n";
+    t0 = std::chrono::steady_clock::now();
+    for (size_t i = 0; i < N; i++)
+    {
+        C_cpu[i] = A[i] + B[i];
+    }
+    t1 = std::chrono::steady_clock::now();
+    ms = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
+    std::cout << "CPU Time:" << ms << " ms\n";
+
+    std::cout << "START Gpu\n";
+    g0 = std::chrono::steady_clock::now();
+    vector_add_gpu(A.data(), B.data(), C_gpu.data(), N);
+    g1 = std::chrono::steady_clock::now();
+    gms = std::chrono::duration_cast<std::chrono::milliseconds>(g1 - g0).count();
+    std::cout << "GPU total time (HtoD + kernel + DtoH): " << gms << " ms\n";
+    g0 = std::chrono::steady_clock::now();
+    vector_add_gpu(A.data(), B.data(), C_gpu.data(), N);
+    g1 = std::chrono::steady_clock::now();
+    gms = std::chrono::duration_cast<std::chrono::milliseconds>(g1 - g0).count();
+    std::cout << "GPU total time (HtoD + kernel + DtoH): " << gms << " ms\n";
+
+    std::cout << (array_close(C_cpu, C_gpu) ? "OK\n" : "MISMATCH\n");
     return 0;
 }
-bool nearly_equal(float a, float b, float eps = 1e-5)
+bool nearly_equal(float a, float b, float eps)
 {
     return std::abs(a - b) <= eps * (1.0f + std::max(std::abs(a), std::abs(b)));
 }
-bool array_close(const std::vector<float> &a, const std::vector<float> &b, float eps = 1e-5)
+bool array_close(const std::vector<float> &a, const std::vector<float> &b, float eps)
 {
     if (a.size() != b.size())
     {
