@@ -1,0 +1,11 @@
+cmake==4.1.0
+ninja==1.13.0
+numpy==2.3.3
+nvidia-cuda-crt==13.0.88
+nvidia-cuda-nvcc==13.0.88
+nvidia-cuda-runtime==13.0.88
+nvidia-nvvm==13.0.88
+packaging==25.0
+pathspec==0.12.1
+pybind11==3.0.1
+scikit_build_core==0.11.6
