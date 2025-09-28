@@ -20,6 +20,9 @@ void vector_add_gpu(const float *hA, const float *hB, float *hC, size_t n)
     cudaEventCreate(&e3);
 
     float *dA = nullptr, *dB = nullptr, *dC = nullptr;
+    cudaHostRegister((void *)hA, n * sizeof(float), cudaHostRegisterDefault);
+    cudaHostRegister((void *)hB, n * sizeof(float), cudaHostRegisterDefault);
+    cudaHostRegister((void *)hC, n * sizeof(float), cudaHostRegisterDefault);
     cudaMalloc(&dA, n * sizeof(float));
     cudaMalloc(&dB, n * sizeof(float));
     cudaMalloc(&dC, n * sizeof(float));
@@ -48,6 +51,9 @@ void vector_add_gpu(const float *hA, const float *hB, float *hC, size_t n)
     cudaEventDestroy(e1);
     cudaEventDestroy(e2);
     cudaEventDestroy(e3);
+    cudaHostUnregister((void *)hA);
+    cudaHostUnregister((void *)hB);
+    cudaHostUnregister((void *)hC);
     cudaFree(dA);
     cudaFree(dB);
     cudaFree(dC);
