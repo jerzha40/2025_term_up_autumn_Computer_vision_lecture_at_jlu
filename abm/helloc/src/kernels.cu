@@ -89,3 +89,57 @@ void vecadd_free(float *dA, float *dB, float *dC)
     cudaFree(dB);
     cudaFree(dC);
 }
+void vector_add_gpu_chunked(const float *hA, const float *hB, float *hC, size_t n)
+{
+    // 1) 选块大小：用可用显存的 80% 估算（3 个数组：A,B,C）
+    size_t freeB = 0, totalB = 0;
+    cudaMemGetInfo(&freeB, &totalB);
+    size_t maxElems = (freeB * 8 / 10) / (3 * sizeof(float));
+    if (maxElems == 0)
+        maxElems = 1;
+
+    // 2) 准备一次性缓冲 & 流
+    // 顶部准备：两套缓冲 + 两个流
+    float *dA[2] = {}, *dB[2] = {}, *dC[2] = {};
+    cudaStream_t s[2];
+    cudaMalloc(&dA[0], maxElems * sizeof(float));
+    cudaMalloc(&dB[0], maxElems * sizeof(float));
+    cudaMalloc(&dC[0], maxElems * sizeof(float));
+    cudaMalloc(&dA[1], maxElems * sizeof(float));
+    cudaMalloc(&dB[1], maxElems * sizeof(float));
+    cudaMalloc(&dC[1], maxElems * sizeof(float));
+    cudaStreamCreate(&s[0]);
+    cudaStreamCreate(&s[1]);
+
+    size_t chunk = 0;
+    for (size_t off = 0; off < n; off += maxElems, ++chunk)
+    {
+        int p = int(chunk & 1);
+        if (chunk >= 2)
+            cudaStreamSynchronize(s[p]); // 重用这套缓冲前先等它上一次的D2H完
+
+        size_t m = std::min(maxElems, n - off);
+        cudaMemcpyAsync(dA[p], hA + off, m * sizeof(float), cudaMemcpyHostToDevice, s[p]);
+        cudaMemcpyAsync(dB[p], hB + off, m * sizeof(float), cudaMemcpyHostToDevice, s[p]);
+
+        int block = 512;
+        int grid = int((m + block - 1) / block);
+        int maxGridX = 0;
+        cudaDeviceGetAttribute(&maxGridX, cudaDevAttrMaxGridDimX, 0);
+        if (grid > maxGridX)
+            grid = maxGridX;
+
+        vecAddKernel<<<grid, block, 0, s[p]>>>(dA[p], dB[p], dC[p], m);
+        cudaMemcpyAsync(hC + off, dC[p], m * sizeof(float), cudaMemcpyDeviceToHost, s[p]);
+    }
+    cudaStreamSynchronize(s[0]);
+    cudaStreamSynchronize(s[1]);
+    cudaStreamDestroy(s[0]);
+    cudaStreamDestroy(s[1]);
+    cudaFree(dA[0]);
+    cudaFree(dB[0]);
+    cudaFree(dC[0]);
+    cudaFree(dA[1]);
+    cudaFree(dB[1]);
+    cudaFree(dC[1]);
+}

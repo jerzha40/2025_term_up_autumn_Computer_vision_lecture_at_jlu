@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <kernels.cuh>
 #include <cuda_runtime.h>
-const size_t N = 1000'000'000;
+const size_t N = 10'000'000;
 bool nearly_equal(float a, float b, float eps = 1e-5);
 bool array_close(const std::vector<float> &a, const std::vector<float> &b, float eps = 1e-5);
 int main()
@@ -61,6 +61,17 @@ int main()
     cudaMemcpy(C_gpu.data(), dC, N * sizeof(float), cudaMemcpyDeviceToHost);
     g1 = std::chrono::steady_clock::now();
     vecadd_free(dA, dB, dC);
+    gms = std::chrono::duration_cast<std::chrono::milliseconds>(g1 - g0).count();
+    std::cout << "GPU total time (HtoD + kernel + DtoH): " << gms << " ms\n";
+
+    g0 = std::chrono::steady_clock::now();
+    vector_add_gpu_chunked(A.data(), B.data(), C_gpu.data(), N);
+    g1 = std::chrono::steady_clock::now();
+    gms = std::chrono::duration_cast<std::chrono::milliseconds>(g1 - g0).count();
+    std::cout << "GPU total time (HtoD + kernel + DtoH): " << gms << " ms\n";
+    g0 = std::chrono::steady_clock::now();
+    vector_add_gpu_chunked(A.data(), B.data(), C_gpu.data(), N);
+    g1 = std::chrono::steady_clock::now();
     gms = std::chrono::duration_cast<std::chrono::milliseconds>(g1 - g0).count();
     std::cout << "GPU total time (HtoD + kernel + DtoH): " << gms << " ms\n";
 
