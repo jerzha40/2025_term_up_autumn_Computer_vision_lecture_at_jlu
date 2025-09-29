@@ -11,8 +11,13 @@ __global__ void vecAddKernel(const float *A, const float *B, float *C, size_t n)
         C[idx] = A[idx] + B[idx];
     }
 }
+
 void vector_add_gpu(const float *hA, const float *hB, float *hC, size_t n)
 {
+    size_t freeB = 0, totalB = 0;
+    cudaMemGetInfo(&freeB, &totalB);
+    printf("VRAM free %.1f GB / total %.1f GB\n", freeB / 1e9, totalB / 1e9);
+
     cudaEvent_t e0, e1, e2, e3;
     cudaEventCreate(&e0);
     cudaEventCreate(&e1);
@@ -61,4 +66,26 @@ void vector_add_gpu(const float *hA, const float *hB, float *hC, size_t n)
 void cuda_warmup()
 {
     cudaFree(0);
+}
+void vecadd_alloc(float *&dA, float *&dB, float *&dC, size_t n)
+{
+    cudaMalloc(&dA, n * sizeof(float));
+    cudaMalloc(&dB, n * sizeof(float));
+    cudaMalloc(&dC, n * sizeof(float));
+}
+void vecadd_run(const float *dA, const float *dB, float *dC, size_t n)
+{
+    int block = 256;
+    int grid = static_cast<int>((n + block - 1) / block);
+    int maxGridX = 0;
+    cudaDeviceGetAttribute(&maxGridX, cudaDevAttrMaxGridDimX, 0);
+    grid = (grid > maxGridX ? maxGridX : grid);
+    vecAddKernel<<<grid, block>>>(dA, dB, dC, n);
+    cudaDeviceSynchronize();
+}
+void vecadd_free(float *dA, float *dB, float *dC)
+{
+    cudaFree(dA);
+    cudaFree(dB);
+    cudaFree(dC);
 }
