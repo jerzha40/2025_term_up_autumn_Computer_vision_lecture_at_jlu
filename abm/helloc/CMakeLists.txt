@@ -14,8 +14,32 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 
 
+
+# 允许用户在 cmake 配置时手工指定 CUTENSOR_ROOT
+set(CUTENSOR_ROOT "C:/Program Files/NVIDIA cuTENSOR/v2.3")
+include_directories(${CUTENSOR_ROOT}/include)
+
+
+message(${CUTENSOR_INCLUDE_DIR})
+message(${CUTENSOR_LIBRARY})
+if(NOT CUTENSOR_INCLUDE_DIR OR NOT CUTENSOR_LIBRARY)
+    message(FATAL_ERROR "cuTENSOR not found, please set CUTENSOR_ROOT")
+endif()
+
+add_library(perco_einsum
+    src/einsum.cpp
+)
+# 给目标加上 cuTENSOR
+target_include_directories(perco_einsum PRIVATE ${CUTENSOR_INCLUDE_DIR})
+target_link_libraries(perco_einsum PUBLIC ${CUTENSOR_LIBRARY} CUDA::cudart CUDA::cuda_driver)
+
+
+
+
 add_executable(test-tensor src/testtensor.cpp)
 
+add_executable(test-einsum src/testeinsum.cpp)
+target_link_libraries(test-einsum PUBLIC perco_einsum)
 
 
 # 建模块，名字要叫 hellocuda（和 PYBIND11_MODULE 一致）

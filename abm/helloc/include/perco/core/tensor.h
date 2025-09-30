@@ -72,10 +72,14 @@ namespace perco
         {
             return data_[offset(indices)];
         }
+        explicit Tensor(const std::vector<uint64_t> &shape)
+            : shape_(shape), dtype_(DType::Float32), data_(numel()) {}
+
     private:
         std::vector<uint64_t> shape_;
         DType dtype_;
         std::vector<float> data_;
     };
+    Tensor einsum(const std::string &spec, const Tensor &A, const Tensor &B);
 } // namespace perco
 #endif // PERCO_TENSOR_H

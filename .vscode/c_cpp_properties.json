@@ -21,7 +21,8 @@
                 "${workspaceFolder}/**",
                 "${env:CUDA_PATH}/include",
                 "D:/workspace-programming/python-environment/Python/Python311/include",
-                "D:/workspace-git/remote/jerzha40/2025_term_up_autumn_Computer_vision_lecture_at_jlu/venv/Lib/site-packages/pybind11/include"
+                "D:/workspace-git/remote/jerzha40/2025_term_up_autumn_Computer_vision_lecture_at_jlu/venv/Lib/site-packages/pybind11/include",
+                "C:/Program Files/NVIDIA cuTENSOR/v2.3/include"
             ],
             "defines": [
                 "_DEBUG",
