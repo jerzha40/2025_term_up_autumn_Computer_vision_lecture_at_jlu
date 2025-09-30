@@ -1,7 +1,7 @@
 #include <cuda_runtime.h>
 #include <stdexcept>
 #include <algorithm>
-#include "kernels.cuh"
+#include <kernels.cuh>
 
 __global__ void vecAddKernel(const float *A, const float *B, float *C, size_t n)
 {
