@@ -30,7 +30,7 @@ py::array_t<float> vecadd(py::array_t<float, py::array::c_style | py::array::for
     return C;
 }
 
-PYBIND11_MODULE(hellocuda, m)
+PYBIND11_MODULE(_fastoper, m)
 {
     m.doc() = "CUDA vector add demo";
     m.def("vecadd", &vecadd, py::arg("A"), py::arg("B"), py::arg("chunked") = false,

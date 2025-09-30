@@ -9,27 +9,22 @@ find_package(pybind11 CONFIG REQUIRED)
 find_package(CUDAToolkit REQUIRED) # 提供 CUDA::cudart 等
 
 # 建模块，名字要叫 hellocuda（和 PYBIND11_MODULE 一致）
-pybind11_add_module(hellocuda
-    src/bindings.cpp
+pybind11_add_module(_fastoper
+    src/vadd.cpp
     src/kernels.cu
 )
-
-target_include_directories(hellocuda PRIVATE
+target_include_directories(_fastoper PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-set_target_properties(hellocuda PROPERTIES
+set_target_properties(_fastoper PROPERTIES
     CUDA_SEPARABLE_COMPILATION ON
-    OUTPUT_NAME "hellocuda" # 生成 hellocuda.pyd/.so
+    OUTPUT_NAME "_fastoper" # 生成 hellocuda.pyd/.so
     PREFIX "${PYTHON_MODULE_PREFIX}"
     SUFFIX "${PYTHON_MODULE_EXTENSION}"
 )
+target_link_libraries(_fastoper PRIVATE CUDA::cudart)
 
-target_link_libraries(hellocuda PRIVATE CUDA::cudart)
-
-# 关键：把二进制扩展安装到包目录 "hellocuda"（即 python 包名）
-# scikit-build-core 会把它和 python/hellocuda/__init__.py 一起打进 wheel
-install(TARGETS hellocuda
+install(TARGETS _fastoper
     LIBRARY DESTINATION hellocuda # Linux/Mac
     RUNTIME DESTINATION hellocuda # Windows 兼容
     ARCHIVE DESTINATION hellocuda
