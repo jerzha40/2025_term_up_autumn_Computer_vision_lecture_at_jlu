@@ -19,7 +19,9 @@
             "name": "MAVC",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${env:CUDA_PATH}/include"
+                "${env:CUDA_PATH}/include",
+                "D:/workspace-programming/python-environment/Python/Python311/include",
+                "D:/workspace-git/remote/jerzha40/2025_term_up_autumn_Computer_vision_lecture_at_jlu/venv/Lib/site-packages/pybind11/include"
             ],
             "defines": [
                 "_DEBUG",

@@ -1,6 +1,5 @@
 cmake==4.1.0
 ninja==1.13.0
-numpy==2.3.3
 nvidia-cuda-crt==13.0.88
 nvidia-cuda-nvcc==13.0.88
 nvidia-cuda-runtime==13.0.88

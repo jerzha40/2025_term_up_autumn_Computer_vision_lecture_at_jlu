@@ -1,0 +1,22 @@
+[build-system]
+requires = ["scikit-build-core>=0.11", "pybind11>=2.12", "numpy>=1.26"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "hellocuda"
+version = "0.0.1"
+description = "CUDA vector add demo (pybind11)"
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.26"]
+
+[tool.scikit-build]
+build-dir = "build/{wheel_tag}"
+
+[tool.scikit-build.cmake]
+build-type = "Release"
+
+[tool.scikit-build.cmake.define]
+CMAKE_CUDA_ARCHITECTURES = "native"
+
+[tool.scikit-build.wheel]
+packages = ["hellocuda"] # 只写这个就够了（包就在项目根）
