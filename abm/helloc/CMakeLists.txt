@@ -9,7 +9,14 @@ find_package(pybind11 CONFIG REQUIRED)
 find_package(CUDAToolkit REQUIRED) # 提供 CUDA::cudart 等
 
 message(_______________${CMAKE_CURRENT_SOURCE_DIR})
+message(_______________${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
+
+add_executable(test-tensor src/testtensor.cpp)
+
+
 
 # 建模块，名字要叫 hellocuda（和 PYBIND11_MODULE 一致）
 pybind11_add_module(_fastoper
