@@ -31,7 +31,28 @@ int main()
     B.iHeight = A->iHeight;
     B.iWidth = A->iWidth;
 
-    st = SAVE_BMP(B.ImageData, A->iWidth, A->iHeight, "gray.bmp", B.ImageType);
+    st = SAVE_BMP(B.ImageData, A->iWidth, A->iHeight, (char *)"gray.bmp", B.ImageType);
+
+    long long *SB = get_sum(&B);
+
+    for (size_t L = 0; L < 20; L++)
+    {
+        Image *AB = (Image *)GlobalAlloc(GPTR, sizeof(Image));
+        AB->iWidth = B.iWidth - L;
+        AB->iHeight = B.iHeight - L;
+        AB->ImageType = B.ImageType;
+        AB->ImageData = (LPBYTE)GlobalAlloc(GPTR, AB->iWidth * AB->iHeight);
+        for (size_t i = 0; i < B.iWidth - L; i++)
+        {
+            for (size_t j = 0; j < B.iHeight - L; j++)
+            {
+                AB->ImageData[PIX(i, j, AB->iWidth)] = get_mean(SB, i, j, L, L, B.iWidth);
+            }
+        }
+        char ss[20];
+        sprintf(ss, "gray%llu.bmp", L);
+        st = SAVE_BMP(AB->ImageData, AB->iWidth, AB->iHeight, ss, AB->ImageType);
+    }
 
     GlobalFree(dst);
     // GlobalFree(src);
