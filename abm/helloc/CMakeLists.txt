@@ -19,6 +19,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(CUTENSOR_ROOT "C:/Program Files/NVIDIA cuTENSOR/v2.3")
 include_directories(${CUTENSOR_ROOT}/include)
 
+find_path(CUTENSOR_INCLUDE_DIR
+    NAMES cutensor.h
+    HINTS "${CUTENSOR_ROOT}"
+    PATH_SUFFIXES include)
+
+find_library(CUTENSOR_LIBRARY
+    NAMES cutensor
+    HINTS "${CUTENSOR_ROOT}"
+    PATH_SUFFIXES lib/13 lib/12)
 
 message(${CUTENSOR_INCLUDE_DIR})
 message(${CUTENSOR_LIBRARY})
