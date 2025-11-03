@@ -1,0 +1,33 @@
+% !TEX program = xelatex
+\documentclass[12pt]{ctexart}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{listingsutf8}
+\usepackage{fancyvrb} % ← 关键！
+
+\lstset{
+  inputencoding=utf8,
+  extendedchars=false,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  breaklines=true,
+  frame=single,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  showstringspaces=false,
+}
+
+\begin{document}
+
+\section{源代码}
+\lstinputlisting[language=C++,caption={main.cpp}]{../proj/main.cpp}
+
+\section{测试结果}
+\subsection{Debug}
+\VerbatimInput[fontsize=\small, frame=single]{../../build/Debug/out.txt}
+\subsection{Release}
+\VerbatimInput[fontsize=\small, frame=single]{../../build/Release/out.txt}
+
+\end{document}
