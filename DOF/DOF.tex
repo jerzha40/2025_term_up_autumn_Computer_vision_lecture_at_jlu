@@ -1,0 +1,91 @@
+% !TEX program = xelatex
+\documentclass[12pt]{ctexart}
+
+% ===== 参考文献与链接 =====
+\usepackage{cite}                 % 简单合并引用
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize]{cleveref} % \cref 智能引用
+
+\begin{document}
+
+\section{DOF}
+\subsection{变量}
+\(\delta\) 容许弥散圆直径
+
+\(f\) 焦距
+
+\(F\) 光圈值
+
+\(R\) 光圈半径
+
+\(u\) \(u_1\) \(u_2\) 物距
+
+\(v\) \(v_1\) \(v_2\) 像距
+
+\(L\) \(L_1\) \(L_2\) 景深 前景深 后景深
+
+
+\subsection{基本等式}
+\[\frac{1}{f}=\frac{1}{u}+\frac{1}{v}\]
+\[\frac{1}{f}=\frac{1}{u_1}+\frac{1}{v_1}\]
+\[\frac{1}{f}=\frac{1}{u_2}+\frac{1}{v_2}\]
+\[R=\frac{f}{F}\]
+
+\subsection[v]{\(v\)}
+\[v=\frac{fu}{u-f}\]
+
+
+\subsection[v1]{\(v_1\)}
+\[\frac{\delta}{R}=\frac{v_1-v}{v}\]
+\[v_1-v=\frac{\delta}{R}v\]
+\[v_1=\frac{\delta}{R}v+v\]
+\[v_1=(1+\frac{\delta}{R})v\]
+
+\subsection[u1 L1]{\(u_1\) \(L_1\)}
+\[u_1=\frac{fv_1}{v_1-f}\]
+\[u_1=\frac{f(1+\frac{\delta}{R})v}{(1+\frac{\delta}{R})v-f}\]
+\[u_1=\frac{f(1+\frac{\delta F}{f})v}{(1+\frac{\delta F}{f})v-f}\]
+\[u_1=\frac{f(1+\frac{\delta F}{f})(\frac{fu}{u-f})}{(1+\frac{\delta F}{f})(\frac{fu}{u-f})-f}\]
+\[u_1=\frac{f(f+\delta F)(\frac{fu}{u-f})}{(f+\delta F)(\frac{fu}{u-f})-f^2}\]
+\[u_1=\frac{f(f+\delta F)fu}{(f^2u+\delta Ffu)-f^2u+f^3}\]
+\[u_1=\frac{f^2u+\delta Ffu}{\delta Fu+f^2}\]
+\[L_1=u-u_1\]
+\[L_1=u-\frac{f^2u+\delta Ffu}{\delta Fu+f^2}\]
+\[L_1=\frac{(\delta Fu+f^2)u-f^2u-\delta Ffu}{\delta Fu+f^2}\]
+\[L_1=\frac{\delta Fu(u-f)}{f^2+\delta Fu}\]
+
+\subsection[v2]{\(v_2\)}
+\[\frac{\delta}{R}=\frac{v-v_2}{v}\]
+\[v-v_2=\frac{\delta}{R}v\]
+\[v_2=(1-\frac{\delta}{R})v\]
+
+\subsection[u2 L2]{\(u_2\) \(L_2\)}
+\[u_2=\frac{fv_2}{v_2-f}\]
+\[u_2=\frac{f(1-\frac{\delta}{R})v}{(1-\frac{\delta}{R})v-f}\]
+\[u_2=\frac{f(1-\frac{\delta F}{f})v}{(1-\frac{\delta F}{f})v-f}\]
+\[u_2=\frac{f(f-\delta F)v}{(f-\delta F)v-f^2}\]
+\[u_2=\frac{f(f-\delta F)(\frac{fu}{u-f})}{(f-\delta F)(\frac{fu}{u-f})-f^2}\]
+\[u_2=\frac{f(f-\delta F)fu}{(f^2u-\delta Ffu)-f^2u+f^3}\]
+\[u_2=\frac{f(f-\delta F)fu}{f^3-\delta Ffu}\]
+\[u_2=\frac{f^2u-\delta Ffu}{f^2-\delta Fu}\]
+\[L_2=u_2-u\]
+\[L_2=\frac{f^2u-\delta Ffu}{f^2-\delta Fu}-u\]
+\[L_2=\frac{f^2u-\delta Ffu}{f^2-\delta Fu}-\frac{u(f^2-\delta Fu)}{f^2-\delta Fu}\]
+\[L_2=\frac{f^2u-\delta Ffu-uf^2+\delta Fu^2}{f^2-\delta Fu}\]
+\[L_2=\frac{\delta Fu^2-\delta Ffu}{f^2-\delta Fu}\]
+\[L_2=\frac{\delta Fu(u-f)}{f^2-\delta Fu}\]
+
+\subsection[L]{\(L\)}
+\[L=L_1+L_2\]
+\[L=\frac{\delta Fu(u-f)}{f^2+\delta Fu}+\frac{\delta Fu(u-f)}{f^2-\delta Fu}\]
+\[L=\delta Fu(u-f)(\frac{1}{f^2+\delta Fu}+\frac{1}{f^2-\delta Fu})\]
+\[L=\delta Fu(u-f)(\frac{f^2-\delta Fu+f^2+\delta Fu}{f^4-\delta^2 F^2u^2})\]
+\[L=\frac{2f^2\delta Fu(u-f)}{f^4-\delta^2 F^2u^2}\]
+
+\(L\)相关计算过程参考由于变量设定不同众说纷纭
+下列出相关参考推导\cite{zhihuDof}\cite{Dofref2}
+
+\bibliographystyle{plain}
+\bibliography{report} % 你已有的 .bib 文件名
+
+\end{document}
